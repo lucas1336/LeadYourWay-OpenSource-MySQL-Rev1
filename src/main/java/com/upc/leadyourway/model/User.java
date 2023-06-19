@@ -45,5 +45,5 @@ public class User {
     private List<Bicycle> bicycles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Card> card;
+    private List<Card> cards;
 }
