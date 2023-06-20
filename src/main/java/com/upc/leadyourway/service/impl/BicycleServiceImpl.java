@@ -2,23 +2,33 @@ package com.upc.leadyourway.service.impl;
 
 import com.upc.leadyourway.exception.ResourceNotFoundException;
 import com.upc.leadyourway.exception.ValidationException;
+import com.upc.leadyourway.model.Availability;
 import com.upc.leadyourway.model.Bicycle;
 import com.upc.leadyourway.model.User;
+import com.upc.leadyourway.repository.AvailabilityRepository;
 import com.upc.leadyourway.repository.BicycleRepository;
 import com.upc.leadyourway.service.BicycleService;
 import com.upc.leadyourway.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class BicycleServiceImpl implements BicycleService {
     BicycleRepository bicycleRepository;
     UserService userService;
+    AvailabilityRepository availabilityRepository;
 
-    public BicycleServiceImpl(BicycleRepository bicycleRepository, UserService userService) {
+    public BicycleServiceImpl(
+            BicycleRepository bicycleRepository,
+            UserService userService,
+            AvailabilityRepository availabilityRepository
+    ) {
         this.bicycleRepository = bicycleRepository;
         this.userService = userService;
+        this.availabilityRepository = availabilityRepository;
     }
 
     @Override
@@ -53,6 +63,43 @@ public class BicycleServiceImpl implements BicycleService {
     @Override
     public List<Bicycle> getAllBicycles() {
         return bicycleRepository.findAll();
+    }
+
+    @Override
+    public List<Bicycle> getAllAvailableBicycles(LocalDate start_date, LocalDate end_date) {
+        List<Bicycle> bicycles = new ArrayList<>();
+        for (Bicycle bicycle: bicycleRepository.findAll()) {
+            List<Availability> availabilities = availabilityRepository.findByBicycleId(bicycle.getId());
+            boolean isAvailable = true;
+            for (Availability availability: availabilities) {
+                if (availability.getAvailabilityStartDate().equals(start_date) || availability.getAvailabilityEndDate().equals(start_date) ||
+                        availability.getAvailabilityStartDate().equals(end_date) || availability.getAvailabilityEndDate().equals(end_date)) {
+                    isAvailable = false;
+                    break;
+                }
+
+                if (availability.getAvailabilityStartDate().isAfter(end_date) || availability.getAvailabilityEndDate().isBefore(start_date))
+                    continue;
+
+                if (availability.getAvailabilityStartDate().isBefore(start_date) && availability.getAvailabilityEndDate().isAfter(end_date)){
+                    isAvailable = false;
+                    break;
+                }
+
+                if (availability.getAvailabilityStartDate().isBefore(start_date) && availability.getAvailabilityEndDate().isBefore(end_date)){
+                    isAvailable = false;
+                    break;
+                }
+
+                if (availability.getAvailabilityStartDate().isAfter(start_date) && availability.getAvailabilityEndDate().isAfter(end_date)){
+                    isAvailable = false;
+                    break;
+                }
+            }
+            if (isAvailable)
+                bicycles.add(bicycle);
+        }
+        return bicycles;
     }
 
     private void existsBicycleByBicycleId(Long bicycleId) {

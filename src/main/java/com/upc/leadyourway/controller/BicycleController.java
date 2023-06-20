@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,6 +38,17 @@ public class BicycleController {
     @GetMapping("/bicycles/{bicycleId}")
     public ResponseEntity<Bicycle> getBicycleById(@PathVariable(name = "bicycleId") Long bicycleId) {
         return new ResponseEntity<Bicycle>(bicycleService.getBicycleById(bicycleId), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/leadyourway/v1/bicycles/available
+    // Method: GET
+    @Transactional(readOnly = true)
+    @GetMapping("/bicycles/available")
+    public ResponseEntity<List<Bicycle>> getAllAvailableBicycles(
+            @RequestParam(name = "start_date") LocalDate start_date,
+            @RequestParam(name = "end_date") LocalDate end_date
+    ) {
+        return new ResponseEntity<List<Bicycle>>(bicycleService.getAllAvailableBicycles(start_date, end_date), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{userId}
