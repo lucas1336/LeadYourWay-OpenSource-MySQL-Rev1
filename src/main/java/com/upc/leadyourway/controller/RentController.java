@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/leadyourway/v1")
+@RequestMapping("/api/leadyourway/v1/rents")
 public class RentController {
     private final RentService rentService;
     private final ModelMapper modelMapper;
@@ -26,7 +26,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents/{rentId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/rents/{rentId}")
+    @GetMapping("/{rentId}")
     public ResponseEntity<Rent> getRentById(@PathVariable(name = "rentId") Long rentId) {
         return new ResponseEntity<Rent>(rentService.getById(rentId), HttpStatus.OK);
     }
@@ -34,7 +34,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents/lender/{lenderId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/rents/lender/{lenderId}")
+    @GetMapping("/lender/{lenderId}")
     public ResponseEntity<List<Rent>> getRentByLenderId(@PathVariable(name = "lenderId") Long lenderId) {
         return new ResponseEntity<List<Rent>>(rentService.getByLenderId(lenderId), HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents/renter/{renterId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/rents/renter/{renterId}")
+    @GetMapping("/renter/{renterId}")
     public ResponseEntity<List<Rent>> getRentByRenterId(@PathVariable(name = "renterId") Long renterId) {
         return new ResponseEntity<List<Rent>>(rentService.getByRenterId(renterId), HttpStatus.OK);
     }
@@ -50,7 +50,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents/bicycle/{bicycleId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/rents/bicycle/{bicycleId}")
+    @GetMapping("/bicycle/{bicycleId}")
     public ResponseEntity<List<Rent>> getRentByBicycleId(@PathVariable(name = "bicycleId") Long bicycleId) {
         return new ResponseEntity<List<Rent>>(rentService.getByBicycleId(bicycleId), HttpStatus.OK);
     }
@@ -58,7 +58,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents
     // Method: POST
     @Transactional
-    @PostMapping("/rents")
+    @PostMapping
     public ResponseEntity<Rent> createRent(@RequestBody RentDto rentDto) {
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
@@ -69,7 +69,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents/{rentId}
     // Method: PUT
     @Transactional
-    @PutMapping("/rents/{rentId}")
+    @PutMapping("/{rentId}")
     public ResponseEntity<Rent> updateRent(@PathVariable(name = "rentId") Long rentId, @RequestBody Rent rent) {
         return new ResponseEntity<Rent>(rentService.update(rentId, rent), HttpStatus.OK);
     }
@@ -77,7 +77,7 @@ public class RentController {
     // URL: http://localhost:8080/api/leadyourway/v1/rents/{rentId}
     // Method: DELETE
     @Transactional
-    @DeleteMapping("/rents/{rentId}")
+    @DeleteMapping("/{rentId}")
     public ResponseEntity<Void> deleteRent(@PathVariable(name = "rentId") Long rentId) {
         rentService.delete(rentId);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/leadyourway/v1")
+@RequestMapping("/api/leadyourway/v1/bicycles")
 public class BicycleController {
     @Autowired
     private BicycleService bicycleService;
@@ -32,7 +32,7 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/bicycles")
+    @GetMapping
     public ResponseEntity<List<Bicycle>> getAllBicycles() {
         return new ResponseEntity<List<Bicycle>>(bicycleRepository.findAll(), HttpStatus.OK);
     }
@@ -40,7 +40,7 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{bicycleId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/bicycles/{bicycleId}")
+    @GetMapping("/{bicycleId}")
     public ResponseEntity<Bicycle> getBicycleById(@PathVariable(name = "bicycleId") Long bicycleId) {
         existsBicycleByBicycleId(bicycleId);
         return new ResponseEntity<Bicycle>(bicycleService.getBicycleById(bicycleId), HttpStatus.OK);
@@ -49,6 +49,7 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/filterByBicycleName
     // Method: GET
     @Transactional(readOnly = true)
+    @GetMapping("/filterByBicycleName")
     public ResponseEntity<List<Bicycle>> getBicyclesByBicycleName(@RequestParam(name = "bicycleName") String bicycleName) {
         return new ResponseEntity<List<Bicycle>>(bicycleRepository.findByBicycleName(bicycleName), HttpStatus.OK);
     }
@@ -56,7 +57,7 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{userId}
     // Method: POST
     @Transactional
-    @PostMapping("/bicycles/{userId}")
+    @PostMapping("/{userId}")
     public ResponseEntity<Bicycle> createBicycleWithUserId(@PathVariable(name = "userId") Long userId, @RequestBody Bicycle bicycle) {
         existsUserByUserId(userId);
         bicycle.setUser(userService.getUserById(userId));
@@ -67,7 +68,7 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{bicycleId}
     // Method: PUT
     @Transactional
-    @PutMapping("/bicycles/{bicycleId}")
+    @PutMapping("/{bicycleId}")
     public ResponseEntity<Bicycle> updateBicycleByBicycleId(@PathVariable(name = "bicycleId") Long bicycleId, @RequestBody Bicycle bicycle) {
         existsBicycleByBicycleId(bicycleId);
         bicycle.setId(bicycleId);
@@ -78,7 +79,7 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{bicycleId}
     // Method: DELETE
     @Transactional
-    @DeleteMapping("/bicycles/{bicycleId}")
+    @DeleteMapping("/{bicycleId}")
     public ResponseEntity<String> deleteBicycleByBicycleId(@PathVariable(name = "bicycleId") Long bicycleId) {
         existsBicycleByBicycleId(bicycleId);
         bicycleService.deleteBicycle(bicycleId);

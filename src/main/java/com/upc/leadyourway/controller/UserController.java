@@ -1,5 +1,6 @@
 package com.upc.leadyourway.controller;
 
+import com.upc.leadyourway.dto.UserDto;
 import com.upc.leadyourway.exception.ResourceNotFoundException;
 import com.upc.leadyourway.exception.ValidationException;
 import com.upc.leadyourway.model.User;
@@ -12,9 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/leadyourway/v1")
+@RequestMapping("/api/leadyourway/v1/users")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -28,28 +30,24 @@ public class UserController {
     // URL: http://localhost:8080/api/leadyourway/v1/users
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<List<User>>(userRepository.findAll(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<List<UserDto>>(users.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable(name = "userId") Long userId) {
         existsUserByUserId(userId);
         return new ResponseEntity<User>(userService.getUserById(userId), HttpStatus.OK);
     }
 
-    // URL: http://localhost:8080/api/leadyourway/v1/users/filterByEmail
-    // Method: GET
-    @Transactional(readOnly = true)
-    @GetMapping("/users/filterByEmail")
-    public ResponseEntity<List<User>> getAllUsersByEmail(@RequestParam(name = "email") String email) {
-        existsUserByEmail(email);
-        return new ResponseEntity<List<User>>(userRepository.findByUserEmail(email), HttpStatus.OK);
-    }
+
 
     // URL: http://localhost:8080/api/leadyourway/v1/login
     // Method: POST
@@ -65,10 +63,10 @@ public class UserController {
     }
 
 
-    // URL: http://localhost:8080/api/leadyourway/v1/users
+    // URL: http://localhost:8080/api/leadyourway/v1/register
     // Method: POST
     @Transactional
-    @PostMapping("/users")
+    @PostMapping("/register")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         validateUser(user);
         existsUserByEmail(user);
@@ -78,23 +76,35 @@ public class UserController {
     // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
     // Method: PUT
     @Transactional
-    @PutMapping("/users/{userId}")
+    @PutMapping("/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable(name = "userId") Long userId, @RequestBody User user) {
         existsUserByUserId(userId);
         validateUser(user);
         user.setId(userId);
         return new ResponseEntity<User>(ifDifferentOrEmptyUpdate(user), HttpStatus.OK);
-        //return new ResponseEntity<User>(userService.updateUser(user), HttpStatus.OK);
+
     }
 
     // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
     // Method: DELETE
     @Transactional
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "userId") Long userId) {
         existsUserByUserId(userId);
         userService.deleteUser(userId);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
+
+    private UserDto convertToDto(User user) {
+        return UserDto.builder()
+                .userFirstName(user.getUserFirstName())
+                .userLastName(user.getUserLastName())
+                .userEmail(user.getUserEmail())
+                .userPhone(user.getUserPhone())
+                .userBirthDate(user.getUserBirthDate())
+                .imageData(user.getImageData())
+                .role(user.getRole())
+                .build();
     }
 
     private void validateUser(User user) {

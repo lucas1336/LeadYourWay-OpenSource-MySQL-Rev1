@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/leadyourway/v1")
+@RequestMapping("/api/leadyourway/v1/cards")
 public class CardController {
     @Autowired
     private CardService cardService;
@@ -32,7 +32,7 @@ public class CardController {
     // URL: http://localhost:8080/api/leadyourway/v1/cards
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/cards")
+    @GetMapping
     public ResponseEntity<List<Card>> getAllCards() {
         return new ResponseEntity<List<Card>>(cardRepository.findAll(), HttpStatus.OK);
     }
@@ -40,7 +40,7 @@ public class CardController {
     // URL: http://localhost:8080/api/leadyourway/v1/cards/{cardId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/cards/{cardId}")
+    @GetMapping("/{cardId}")
     public ResponseEntity<Card> getCardById(@PathVariable(name = "cardId") Long cardId) {
         existsCardByCardId(cardId);
         return new ResponseEntity<Card>(cardService.getCardById(cardId), HttpStatus.OK);
@@ -49,7 +49,7 @@ public class CardController {
     // URL: http://localhost:8080/api/leadyourway/v1/cards/user/{userId}
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/cards/user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<Card>> getCardByUserId(@PathVariable(name = "userId") Long userId) {
         existsCardByUserId(userId);
         return new ResponseEntity<List<Card>>(cardRepository.findByUserId(userId), HttpStatus.OK);
@@ -58,7 +58,7 @@ public class CardController {
     // URL: http://localhost:8080/api/leadyourway/v1/cards/{userId}
     // Method: POST
     @Transactional
-    @PostMapping("/cards/{userId}")
+    @PostMapping("/{userId}")
     public ResponseEntity<Card> createCard(@PathVariable(name = "userId") Long userId, @RequestBody Card card) {
         existsUserByUserId(userId);
         existsCardByCardNumber(card);
@@ -71,7 +71,7 @@ public class CardController {
     // URL: http://localhost:8080/api/leadyourway/v1/cards/{cardId}
     // Method: PUT
     @Transactional
-    @PutMapping("/cards/{cardId}")
+    @PutMapping("/{cardId}")
     public ResponseEntity<Card> updateCard(@PathVariable(name = "cardId") Long cardId, @RequestBody Card card) {
         existsCardByCardId(cardId);
         card.setCardType(card.getCardType().toLowerCase());
@@ -83,7 +83,7 @@ public class CardController {
     // URL: http://localhost:8080/api/leadyourway/v1/cards/{cardId}
     // Method: DELETE
     @Transactional
-    @DeleteMapping("/cards/{cardId}")
+    @DeleteMapping("/{cardId}")
     public ResponseEntity<Void> deleteCard(@PathVariable(name = "cardId") Long cardId) {
         existsCardByCardId(cardId);
         cardService.deleteCard(cardId);
