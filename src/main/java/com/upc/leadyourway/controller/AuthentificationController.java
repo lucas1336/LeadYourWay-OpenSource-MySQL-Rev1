@@ -52,14 +52,6 @@ public class AuthentificationController {
         authService.refreshToken(request, response);
     }
 
-    @Transactional(readOnly = true)
-    @PostMapping("/caca")
-    public ResponseEntity<User> caca(@RequestBody LoginRequest request) {
-
-        User user = userRepository.findByUserEmail(request.getUserEmail());
-
-        return new ResponseEntity<User>(user, HttpStatus.OK);
-    }
 
 
 
