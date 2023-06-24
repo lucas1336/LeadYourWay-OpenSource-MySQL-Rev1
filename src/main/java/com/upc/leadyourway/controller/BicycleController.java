@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -31,6 +32,8 @@ public class BicycleController {
     @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<List<Bicycle>> getAllBicycles() {
+        //print somethign
+        System.out.println("getAllBicycles");
         return new ResponseEntity<List<Bicycle>>(bicycleService.getAllBicycles(), HttpStatus.OK);
     }
 
@@ -45,13 +48,14 @@ public class BicycleController {
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/available
     // Method: GET
     @Transactional(readOnly = true)
-    @GetMapping("/bicycles/available")
+    @GetMapping("/available")
     public ResponseEntity<List<Bicycle>> getAllAvailableBicycles(
-            @RequestParam(name = "start_date") LocalDate start_date,
-            @RequestParam(name = "end_date") LocalDate end_date
+            @RequestParam(name = "start_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start_date,
+            @RequestParam(name = "end_date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end_date
     ) {
-        return new ResponseEntity<List<Bicycle>>(bicycleService.getAllAvailableBicycles(start_date, end_date), HttpStatus.OK);
+        return new ResponseEntity<>(bicycleService.getAllAvailableBicycles(start_date, end_date), HttpStatus.OK);
     }
+
 
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{userId}
     // Method: POST

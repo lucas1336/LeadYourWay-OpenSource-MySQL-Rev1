@@ -69,6 +69,8 @@ public class BicycleServiceImpl implements BicycleService {
     public List<Bicycle> getAllAvailableBicycles(LocalDate start_date, LocalDate end_date) {
         List<Bicycle> bicycles = new ArrayList<>();
         for (Bicycle bicycle: bicycleRepository.findAll()) {
+            // print bicycle id
+            System.out.println("bicycle id: " + bicycle.getId());
             List<Availability> availabilities = availabilityRepository.findByBicycleId(bicycle.getId());
             boolean isAvailable = true;
             for (Availability availability: availabilities) {
