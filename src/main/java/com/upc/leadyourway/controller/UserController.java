@@ -42,9 +42,11 @@ public class UserController {
     // Method: GET
     @Transactional(readOnly = true)
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable(name = "userId") Long userId) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable(name = "userId") Long userId) {
         existsUserByUserId(userId);
-        return new ResponseEntity<User>(userService.getUserById(userId), HttpStatus.OK);
+        User user = userService.getUserById(userId);
+        UserDto userDto = convertToDto(user);
+        return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }
 
 
@@ -103,7 +105,8 @@ public class UserController {
                 .userPhone(user.getUserPhone())
                 .userBirthDate(user.getUserBirthDate())
                 .imageData(user.getImageData())
-                .role(user.getRole())
+                .bicycles(user.getBicycles())
+                .cards(user.getCards())
                 .build();
     }
 

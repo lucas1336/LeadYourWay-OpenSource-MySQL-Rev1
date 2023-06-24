@@ -42,6 +42,9 @@ public class AuthentificationController {
     public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
 
         AuthenticationResponse loggedUser = authService.login(request);
+        // Agrega el ID del usuario a la respuesta
+
+
         return new ResponseEntity<AuthenticationResponse>(loggedUser, HttpStatus.OK);
     }
 
