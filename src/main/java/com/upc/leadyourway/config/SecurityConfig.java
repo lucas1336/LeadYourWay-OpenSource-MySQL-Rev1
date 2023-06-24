@@ -20,13 +20,11 @@
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
+            http.cors().and()
                     .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers("/api/leadyourway/v1/users").authenticated()
-                            .requestMatchers("/api/leadyourway/v1/rents").authenticated()
-                            .requestMatchers("/api/leadyourway/v1/cards").authenticated()
-                            .requestMatchers("/api/leadyourway/v1/bicycles").authenticated()
-                            .requestMatchers("/api/leadyourway/v1/auth/**").permitAll()
+                            .requestMatchers("/api/leadyourway/v1/auth/**","/api/leadyourway/v1/bicycles").permitAll()
+                            .requestMatchers("/api/leadyourway/v1/users",
+                                    "/api/leadyourway/v1/rents","/api/leadyourway/v1/cards").authenticated()
                             .anyRequest().authenticated())
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(session -> session

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/leadyourway/v1/bicycles")
 public class BicycleController {
@@ -31,6 +33,7 @@ public class BicycleController {
 
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles
     // Method: GET
+
     @Transactional(readOnly = true)
     @GetMapping
     public ResponseEntity<List<Bicycle>> getAllBicycles() {
