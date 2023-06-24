@@ -28,18 +28,11 @@ public class Rent {
     @Column(name="rent_price", nullable = false)
     private Double rentPrice;
 
-    @Column(name="rent_status", nullable = false)
-    private String rentStatus;
-
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "lender_id", referencedColumnName = "id")
-    private User lender;
-
-    @ManyToOne(optional = false, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "renter_id", referencedColumnName = "id")
-    private User renter;
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bicycle_id", referencedColumnName = "id")
     private Bicycle bicycle;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "card_id", referencedColumnName = "id")
+    private Card card;
 }

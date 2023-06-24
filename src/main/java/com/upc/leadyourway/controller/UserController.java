@@ -176,6 +176,9 @@ public class UserController {
             if (user.getUserPhone() != null && !user.getUserPhone().isEmpty() && !user.getUserPhone().equals(userToUpdate.getUserPhone())) {
                 userToUpdate.setUserPhone(user.getUserPhone());
             }
+            if (user.getImageData() != null && !user.getImageData().isEmpty() && !user.getImageData().equals(userToUpdate.getImageData())) {
+                userToUpdate.setImageData(user.getImageData());
+            }
             return userService.updateUser(userToUpdate);
         }).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user.getId()));
     }

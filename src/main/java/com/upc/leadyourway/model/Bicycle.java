@@ -43,7 +43,4 @@ public class Bicycle {
             foreignKey = @ForeignKey(name = "FK_USER_BICYCLE_ID"))
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
-
-    @OneToMany(mappedBy = "bicycle", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Availability> availabilities;
 }

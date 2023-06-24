@@ -2,11 +2,13 @@ package com.upc.leadyourway.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class RentDto {
-    private String rentStartDate;
-    private String rentEndDate;
+    private LocalDate rentStartDate;
+    private LocalDate rentEndDate;
     private Double rentPrice;
-    private Long lenderId;
     private Long bicycleId;
+    private Long cardId;
 }
