@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-@CrossOrigin(origins = "http://localhost:4200")
+
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/leadyourway/v1/users")
 public class UserController {
@@ -83,7 +84,8 @@ public class UserController {
         existsUserByUserId(userId);
         validateUser(user);
         user.setId(userId);
-        return new ResponseEntity<User>(ifDifferentOrEmptyUpdate(user), HttpStatus.OK);
+        User responseUser = ifDifferentOrEmptyUpdate(user);
+        return new ResponseEntity<User>(responseUser, HttpStatus.OK);
 
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/leadyourway/v1/bicycles")
 public class BicycleController {
