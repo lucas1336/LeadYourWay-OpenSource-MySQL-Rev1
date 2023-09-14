@@ -23,8 +23,10 @@
             http.cors().and()
                     .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers("/api/leadyourway/v1/auth/**","/api/leadyourway/v1/bicycles", "/api/leadyourway/v1/bicycles/available").permitAll()
+                            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                             .requestMatchers("/api/leadyourway/v1/users",
                                     "/api/leadyourway/v1/rents","/api/leadyourway/v1/cards").authenticated()
+
                             .anyRequest().authenticated())
                     .csrf(csrf -> csrf.disable())
                     .sessionManagement(session -> session
